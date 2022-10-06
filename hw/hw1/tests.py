@@ -277,6 +277,101 @@ def run_map(func: Callable) -> None:
     ]
     return _run_tests(partial(func, normalized=False), cases)
 
+def run_catalyst_map(func: Callable) -> None:
+    cases = [
+        {
+            "output": torch.Tensor([[0, 0, 0, 0]]),
+            "target": torch.Tensor([[0, 0, 0, 0]]),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: 0.0,
+                3: 0.0,
+                10: 0.0,
+                100: 0.0,
+            },
+        },
+        {
+            "output": torch.Tensor([[1, 1, 1, 1]]),
+            "target": torch.Tensor([[1, 1, 1, 1]]),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: 1.0,
+                3: 1.0,
+                10: 1.0,
+                100: 1.0,
+            },
+        },
+        {
+            "output": torch.Tensor([[0, 0, 0, 0]]),
+            "target": torch.Tensor([[1, 1, 1, 1]]),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: 1.0,
+                3: 1.0,
+                10: 1.0,
+                100: 1.0,
+            },
+        },
+        {
+            "output": torch.Tensor([[1, 1, 1, 1]]),
+            "target": torch.Tensor([[0, 0, 0, 0]]),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: 0.0,
+                3: 0.0,
+                10: 0.0,
+                100: 0.0,
+            },
+        },
+        {
+            "output": torch.Tensor([[0.5, 0.4, 0.3, 0.2]]),
+            "target": torch.Tensor([[1, 0, 1, 0]]),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: 1.0,
+                3: (1 + 2 / 3) / 3,
+                10: (1 + 2 / 3) / 4,
+                100: (1 + 2 / 3) / 4,
+            },
+        },
+        {
+            "output": torch.Tensor(
+                [
+                    [9, 5, 3, 0, 7, 4, 0, 0, 6, 0, 0, 0, 0, 0, 0, 1, 8, 2, 0, 10],
+                    [0, 0, 1, 5, 9, 3, 0, 0, 0, 0, 0, 4, 0, 0, 10, 7, 0, 2, 8, 6],
+                    [0, 1, 4, 8, 6, 5, 3, 7, 10, 0, 9, 0, 0, 2, 0, 0, 0, 0, 0, 0],
+                    [7, 8, 0, 0, 1, 0, 4, 0, 10, 0, 0, 6, 0, 0, 0, 9, 2, 3, 5, 0],
+                ]
+            ),
+            "target": torch.Tensor(
+                [
+                    [1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
+                    [1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0],
+                    [0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0],
+                    [0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0],
+                ]
+            ),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: (0.0 + 1.0 + 0.0 + 0.0) / 4,
+                3: 0.6042,
+                10: (
+                    (1 / 2 + 2 / 3 + 3 / 6 + 4 / 7 + 5 / 8) / 10
+                    + (1 + 2 / 9 + 3 / 10) / 10
+                    + (1 / 2 + 2 / 4 + 3 / 6 + 4 / 8 + 5 / 9) / 10
+                    + (1 / 3 + 2 / 5 + 3 / 8) / 10
+                ) / 4,
+                100: (
+                    (1 / 2 + 2 / 3 + 3 / 6 + 4 / 7 + 5 / 8 + 6 / 12 + 7 / 14 + 8 / 20) / 20
+                    + (1 + 2 / 9 + 3 / 10 + 4 / 12 + 5 / 14 + 6 / 15 + 7 / 16 + 8 / 17) / 20
+                    + (1 / 2 + 2 / 4 + 3 / 6 + 4 / 8 + 5 / 9 + 6 / 11 + 7 / 13 + 8 / 16 + 9 / 18 + 10 / 19) / 20
+                    + (1 / 3 + 2 / 5 + 3 / 8 + 4 / 12 + 5 / 16 + 6 / 17 + 7 / 18 + 8 / 19 + 9 / 20) / 20
+                ) / 4
+            },
+        },
+    ]
+    return _run_catalyst_tests(partial(func), cases)
+
 
 def run_mnap(func: Callable) -> None:
     cases = [
@@ -485,6 +580,18 @@ def _run_tests(func: Callable, cases: list[dict[str, Any]]) -> None:
         expected = case.pop("expected")
         for k in case.pop("topk"):
             actual = func(**case, topk=k)
+            torch.testing.assert_close(
+                actual,
+                torch.tensor(expected[k]) if isinstance(actual, torch.Tensor) else expected[k],
+                msg=lambda _, __, msg: f"Inputs:{json.dumps({key: (v.tolist() if isinstance(v, torch.Tensor) else v) for key, v in (case | {'topk': k}).items()}, indent=2, ensure_ascii=False)}\n{msg}",
+            )
+
+def _run_catalyst_tests(func: Callable, cases: list[dict[str, Any]]) -> None:
+    for case in cases:
+        expected = case.pop("expected")
+        actuals = func(**case)
+        for i, k in enumerate(case.pop("topk")):
+            actual = actuals[i]
             torch.testing.assert_close(
                 actual,
                 torch.tensor(expected[k]) if isinstance(actual, torch.Tensor) else expected[k],
