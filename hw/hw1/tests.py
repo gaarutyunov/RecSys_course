@@ -488,5 +488,5 @@ def _run_tests(func: Callable, cases: list[dict[str, Any]]) -> None:
             torch.testing.assert_close(
                 actual,
                 torch.tensor(expected[k]) if isinstance(actual, torch.Tensor) else expected[k],
-                msg=lambda msg: f"Inputs:{json.dumps({key: (v.tolist() if isinstance(v, torch.Tensor) else v) for key, v in (case | {'topk': k}).items()}, indent=2, ensure_ascii=False)}\n{msg}",
+                msg=lambda _, __, msg: f"Inputs:{json.dumps({key: (v.tolist() if isinstance(v, torch.Tensor) else v) for key, v in (case | {'topk': k}).items()}, indent=2, ensure_ascii=False)}\n{msg}",
             )
