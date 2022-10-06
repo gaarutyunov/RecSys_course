@@ -575,6 +575,107 @@ def run_ndcg(func: Callable) -> None:
     return _run_tests(func, cases)
 
 
+def run_catalyst_ndcg(func: Callable) -> None:
+    cases = [
+        {
+            "output": torch.Tensor([[0, 0, 0, 0]]),
+            "target": torch.Tensor([[0, 0, 0, 0]]),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: 0.0,
+                3: 0.0,
+                10: 0.0,
+                100: 0.0,
+            },
+        },
+        {
+            "output": torch.Tensor([[1, 1, 1, 1]]),
+            "target": torch.Tensor([[1, 1, 1, 1]]),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: 1.0,
+                3: 1.0,
+                10: 1.0,
+                100: 1.0,
+            },
+        },
+        {
+            "output": torch.Tensor([[0, 0, 0, 0]]),
+            "target": torch.Tensor([[1, 1, 1, 1]]),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: 1.0,
+                3: 1.0,
+                10: 1.0,
+                100: 1.0,
+            },
+        },
+        {
+            "output": torch.Tensor([[1, 1, 1, 1]]),
+            "target": torch.Tensor([[0, 0, 0, 0]]),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: 0.0,
+                3: 0.0,
+                10: 0.0,
+                100: 0.0,
+            },
+        },
+        {
+            "output": torch.Tensor([[0.5, 0.4, 0.3, 0.2]]),
+            "target": torch.Tensor([[1, 0, 1, 0]]),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: 1.0,
+                3: (1 / math.log2(1 + 1) + 1 / math.log2(3 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1)),
+                10: (1 / math.log2(1 + 1) + 1 / math.log2(3 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1)),
+                100: (1 / math.log2(1 + 1) + 1 / math.log2(3 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1)),
+            },
+        },
+        {
+            "output": torch.Tensor(
+                [
+                    [9, 5, 3, 0, 7, 4, 0, 0, 6, 0, 0, 0, 0, 0, 0, 1, 8, 2, 0, 10],
+                    [0, 0, 1, 5, 9, 3, 0, 0, 0, 0, 0, 4, 0, 0, 10, 7, 0, 2, 8, 6],
+                    [0, 1, 4, 8, 6, 5, 3, 7, 10, 0, 9, 0, 0, 2, 0, 0, 0, 0, 0, 0],
+                    [7, 8, 0, 0, 1, 0, 4, 0, 10, 0, 0, 6, 0, 0, 0, 9, 2, 3, 5, 0],
+                ]
+            ),
+            "target": torch.Tensor(
+                [
+                    [1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
+                    [1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0],
+                    [0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0],
+                    [0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0],
+                ]
+            ),
+            "topk": [1, 3, 10, 100],
+            "expected": {
+                1: (0.0 + 1.0 + 0.0 + 0.0) / 4,
+                3: (
+                           (1 / math.log2(2 + 1) + 1 / math.log2(3 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1))
+                           + (1 / math.log2(1 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1))
+                           + (1 / math.log2(2 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1))
+                           + (1 / math.log2(3 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1))
+                   ) / 4,
+                10: (
+                            (1 / math.log2(2 + 1) + 1 / math.log2(3 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(7 + 1) + 1 / math.log2(8 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1) + 1 / math.log2(4 + 1) + 1 / math.log2(5 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(7 + 1) + 1 / math.log2(8 + 1))
+                            + (1 / math.log2(1 + 1) + 1 / math.log2(9 + 1) + 1 / math.log2(10 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1) + 1 / math.log2(4 + 1) + 1 / math.log2(5 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(7 + 1) + 1 / math.log2(8 + 1))
+                            + (1 / math.log2(2 + 1) + 1 / math.log2(4 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(8 + 1) + 1 / math.log2(9 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1) + 1 / math.log2(4 + 1) + 1 / math.log2(5 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(7 + 1) + 1 / math.log2(8 + 1) + 1 / math.log2(9 + 1) + 1 / math.log2(10 + 1))
+                            + (1 / math.log2(3 + 1) + 1 / math.log2(5 + 1) + 1 / math.log2(8 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1) + 1 / math.log2(4 + 1) + 1 / math.log2(5 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(7 + 1) + 1 / math.log2(8 + 1) + 1 / math.log2(9 + 1))
+                    ) / 4,
+                100: (
+                             (1 / math.log2(2 + 1) + 1 / math.log2(3 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(7 + 1) + 1 / math.log2(8 + 1) + 1 / math.log2(12 + 1) + 1 / math.log2(14 + 1) + 1 / math.log2(20 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1) + 1 / math.log2(4 + 1) + 1 / math.log2(5 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(7 + 1) + 1 / math.log2(8 + 1))
+                             + (1 / math.log2(1 + 1) + 1 / math.log2(9 + 1) + 1 / math.log2(10 + 1) + 1 / math.log2(12 + 1) + 1 / math.log2(14 + 1) + 1 / math.log2(15 + 1) + 1 / math.log2(16 + 1) + 1 / math.log2(17 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1) + 1 / math.log2(4 + 1) + 1 / math.log2(5 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(7 + 1) + 1 / math.log2(8 + 1))
+                             + (1 / math.log2(2 + 1) + 1 / math.log2(4 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(8 + 1) + 1 / math.log2(9 + 1) + 1 / math.log2(11 + 1) + 1 / math.log2(13 + 1) + 1 / math.log2(16 + 1) + 1 / math.log2(18 + 1) + 1 / math.log2(19 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1) + 1 / math.log2(4 + 1) + 1 / math.log2(5 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(7 + 1) + 1 / math.log2(8 + 1) + 1 / math.log2(9 + 1) + 1 / math.log2(10 + 1))
+                             + (1 / math.log2(3 + 1) + 1 / math.log2(5 + 1) + 1 / math.log2(8 + 1) + 1 / math.log2(12 + 1) + 1 / math.log2(16 + 1) + 1 / math.log2(17 + 1) + 1 / math.log2(18 + 1) + 1 / math.log2(19 + 1) + 1 / math.log2(20 + 1)) / (1 / math.log2(1 + 1) + 1 / math.log2(2 + 1) + 1 / math.log2(3 + 1) + 1 / math.log2(4 + 1) + 1 / math.log2(5 + 1) + 1 / math.log2(6 + 1) + 1 / math.log2(7 + 1) + 1 / math.log2(8 + 1) + 1 / math.log2(9 + 1))
+                     ) / 4
+            },
+        },
+    ]
+    return _run_catalyst_tests(func, cases)
+
+
 def _run_tests(func: Callable, cases: list[dict[str, Any]]) -> None:
     for case in cases:
         expected = case.pop("expected")
