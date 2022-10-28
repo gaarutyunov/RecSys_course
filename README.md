@@ -3,29 +3,29 @@ The course on recommender systems conducted in National Research University - Hi
 Курс по рекомендательным системам, который проводится в Национальном исследовательском университете Высшей школе Экономики (Москва). Академический год 2022 - 2023. 
 
 
-## Полезные материалы
+## Useful Links
 
-- [Wiki-страница курса,](http://wiki.cs.hse.ru/RecSys_2022_2023) на ней для каждого семинара публикуются дополнительные материалы, которые необходимо просмотреть на неделе, когда проходит семинар. 
-- Материалы для каждого семинара лежат в папках `/seminar*`
-- Если вы хотите скачать из репозитория конкретную папку, просто вставьте ссылку на неё [в сервис для скачки.](https://minhaskamal.github.io/DownGit/#/home)
+- [Wiki page of this course](http://wiki.cs.hse.ru/RecSys_2022_2023). 
+- The code materials for each seminars can be found in the corresponding folders `/seminar*`. 
+- To download any folder please use [this link.](https://minhaskamal.github.io/DownGit/#/home)
 - Любые вопросы можно задавать в чат с технической поддержкой[![TG1](https://img.shields.io/badge/Telegram-chat-blue)](https://t.me/+51dCYfNAXlZiMjYy)
--  [Таблица с вашими оценками](https://docs.google.com/spreadsheets/d/1RvuhuC1euQw0rSNANKWvG7wWSjiAiuWd/edit?usp=sharing&ouid=104963596150558587903&rtpof=true&sd=true)
+-  [Table with grades](https://docs.google.com/spreadsheets/d/1RvuhuC1euQw0rSNANKWvG7wWSjiAiuWd/edit?usp=sharing&ouid=104963596150558587903&rtpof=true&sd=true)
 
-## Самый важный раздел
+## The most important section
 
-Оценка ставится по формуле:
+The final grade is calculated as follows:
 
 ```
-0.3 * Home Assignments + 0.15 * Article Summary + 0.15 * Weekly Quizzes + 0.4 * Exam
+0.3 * Home Assignment + 0.15 * Article Summary + 0.15 * Weekly Quizzes + 0.4 * Exam
 ```
-где
-Home Assignments - 3 домашних работы в Jupyter Notebook (max 10 баллов за каждую). 
+where
+Home Assignments - 3 home assignments in Jupyter Notebook (max 10 points each). 
 Article Summary - конспект/презентация статьи из предложенного списка с критическим анализом (без выступления на семинаре) (max 10 баллов). 
 Weekly Quizzes - 7 квизов по мотивам материалов семинаров, которые сдаются перед началом следующего занятия в Google Forms (ариф.среднее за все квизы, max 10 баллов за каждый). 
 Exam - письменный экзамен в формате решения case-study построения рекомендательной системы для бизнеса (max 10 баллов). 
 
 
-## Course Outline / Большой план маленьких побед
+## Course Outline / Big plan for small victories
 
 Week 1
 -----
@@ -66,49 +66,30 @@ Seminar 6
 Week 4
 ------
 Seminar 7
-- Sequential и session-based models
-- RecBole library
+- Sequential models
 - Next-basket and next-item prediction tasks
 
 Seminar 8
-- Autoencoders and Variational autoencoders for RecSys (VAE, Mult-VAE, Multi-VAE, Rec-VAE)
-- Transformer-based models for RecSys (BERT4Rec, SASRec, etc.)
-- Transformers4rec NVIDIA library
+- Context-aware recommender systems
+- Time-aware и time-dependent models
 
 Week 5
 --------
-Seminar 9
-- Context-aware recommender models
-- Time-aware и time-dependent models
-- Geo-dependent models
-
-Seminar 10
-- Graph-based recommender systems overview
-- Inductive learning (out-of-sample users, cold start problem)
-- LightGCN, GF-CF, P3 alpha, GraphSage -> PinSage
+Seminars 9 - 10
+- Autoencoders and Variational autoencoders for RecSys (VAE, Mult-VAE, Multi-VAE, Rec-VAE)
 
 Week 6
 -----
 Seminar 11
-- Knowledge-based graph recommender systems overview
-- KDA, KGAT, KGCN, RippleNet
-
-Seminar 12
-- RL for RecSys overview
-- Hands-on example of RL model for recommender systems
+- Graph-based recommender systems overview
+- Inductive learning (out-of-sample users, cold start problem)
+- GNN, GCN, GraphSage -> PinSage, GAT
 
 Week 7
 -----
 Seminar 13
 - Explainability & interpretability of recommender systems
-- Attention is not explanation? 
-
-Seminar 14
-- Designing anf analyzing A/B tests in recommeder systems
-- Feedback loop problem
-- Bias types and debiasing techniques
-- Multiarmed bandits
-- RL testing 
+- Knowledge-based graph recommenders
 
 Week 8
 -----
@@ -116,13 +97,13 @@ Seminar 15 & Seminar 16
 - Vanilla Production-ready RecSys service.
 
 
-## Контрибьюторы и создатели
+## Contributors 
 
-* [Ананьева Марина](https://github.com/anamarina)
-* [Милоградский Саша](https://github.com/Nemexur)
-* [Рамазанова Ая](https://github.com/AyaRamazanova)
+* [Marina Ananyeva](https://github.com/anamarina)
+* [Alex Milogradskiy](https://github.com/Nemexur)
+* [Oleg Lashinin](https://github.com/fotol1)
 
 
-## Лицензия
+## License
 
-Весь контент, созданный для этого курса распространяются на правах лицензии [MIT License](https://github.com/hse-econ-data-science/dap_2020_fall/blob/master/LICENSE) Материалы публикуются как общественное достояние.
+All content created for this course is licensed under the [MIT License](). The materials are published in the public domain.
